@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Supreme Court Dockets</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="index.js"></script>
+	<script type="text/javascript" src="Data/dockets_16.js"></script>
+	<script type="text/javascript" src="Data/dockets_17.js"></script>
+	<script type="text/javascript" src="Data/dockets_18.js"></script>
+</head>
+
+<body class="normal_background">
+	<div class="container">
+		<h1>Supreme Court Dockets</h1>
+		<h2>Filterable Table</h2>
+		<p>Type something in the input field to search the table for first names, last names or emails:</p>  
+		<input class="form-control" id="myInput" type="text" placeholder="Search..">
+		<br>
+		<table id="tbl" class=table>
+			<thead>
+				<tr>
+					<th style="width: 20%">Docket No.</th>
+					<th>Case</th>
+					<th style="width: 30%">Last proceeding</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody id="tbdy">
+
+			</tbody>
+
+		</table>
+	</div>
+	<script>
+		var obj = JSON.parse(docket_16);
+		var tbody = document.getElementById('tbdy');
+
+
+
+
+
+		async function get_data() {
+			for (var i = 0; i < obj.length; i++) {
+
+				var tr = "<tr>";
+
+				tr += "<td><a target='_blank' href='" + obj[i].WebAddress + "'>" + obj[i].DocketNumber + "</a>" + "</td>";
+				tr += "<td>" + obj[i].CaseTitle + "</td>";
+
+				var orig_d = obj[i].DocketProceedings[obj[i].DocketProceedings.length - 1].ProceedingDate;
+				var new_d = orig_d.substr(0, 10);
+				//var new_d2 = Date(new_d).slice(0, 15);
+				var new_d2 = Date(new_d);
+
+
+
+				tr += "<td>" + new_d + "</td>";
+				tr += "<td>" + obj[i].DocketProceedings[obj[i].DocketProceedings.length - 1].ProceedingDescription + "</td>";
+				//DocketProceedings
+				tr += "</tr>";
+
+				tbody.innerHTML += tr;
+
+				if (i === 40) {
+					break;
+				}
+			}
+		}
+		get_data();
+
+
+		$(document).ready(function () {
+			$("#myInput").on("keyup", function () {
+				var value = $(this).val().toLowerCase();
+				$("#tbl tr").filter(function () {
+					$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+				});
+			});
+		});
+	</script>
+	<script>
+
+	</script>
+</body>
+
+</html>
